@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Oct 24 21:37:17 2020
-
-@author: Championgy
-"""
-
 #!/data/miniconda3/envs/env1/bin/python
 
 from filelock import FileLock
