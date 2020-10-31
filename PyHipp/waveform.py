@@ -126,6 +126,30 @@ class Waveform(DPT.DPObject):
             # .........................................
             # ..................code...................
             # .........................................
+            if getNumEvents:  
+                # this will be called by PanGUI.main to return two values: 
+                # first value is the total number of items to pan through, 
+                # second value is the current index of the item to plot
+                if plot_type == 'Channel':
+                    return self.numSets, i
+
+            if plot_type == 'Channel':
+                y = self.data[i]
+                x = np.arange(y.shape[0])
+                ax.plot(x, y)
+            
+                if not plotOpts['TitleOff']:
+                    ax.set_title(self.dirs[i])
+                            
+                if not plotOpts['LabelsOff']:
+                    ax.set_xlabel('Time (sample unit)')
+                    ax.set_ylabel('Voltage (uV)')
+            
+                if plotOpts['TicksOff']:
+                    ax.set_xticklabels([])
+                    ax.set_yticklabels([])
+
+
             
             return  # please return two items here: <total-number-of-items-to-plot>, <current-item-index-to-plot>
                 
