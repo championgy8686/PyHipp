@@ -2,10 +2,9 @@ import DataProcessingTools as DPT
 import matplotlib.pyplot as plt
 import hickle as hkl
 import os
-Import numpy as np
+import numpy as np
 
-
-class Waveform(DPT.DPObject)::
+class Waveform(DPT.DPObject):
     # Please change the class name according to your needs
     filename = 'waveform.hkl'  # this is the filename that will be saved if it's run with saveLevel=1
     argsList = []  # these is where arguments used in the creation of the object are listed
