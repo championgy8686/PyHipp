@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import hickle as hkl
 import os
 import numpy as np
+from PyHipp.misc import getChannelInArray
+
 
 class Waveform(DPT.DPObject):
     # Please change the class name according to your needs
@@ -61,8 +63,6 @@ class Waveform(DPT.DPObject):
         self.numSets = 1
         self.current_plot_type = None
 
-
-        
         # check on the mountainsort template data and create a DPT object accordingly
         # Example:
         if self.data:
@@ -71,10 +71,7 @@ class Waveform(DPT.DPObject):
         else:
             # create empty object if data is empty
             DPT.DPObject.create(self, dirs=[], *args, **kwargs)     
-            
-        
-
-        
+              
     def append(self, wf):
         # this function will be called by processDirs to append the values of certain fields
         # from an extra object (wf) to this object
@@ -84,13 +81,7 @@ class Waveform(DPT.DPObject):
         for ar in wf.array_dict:
             self.array_dict[ar] = self.numSets
         self.numSets += 1
-
-        # .........................................
-        # ..................code...................
-        # .........................................
         
-
-
         
     def plot(self, i = None, ax = None, getNumEvents = False, getLevels = False,\
              getPlotOpts = False, overlay = False, **kwargs):
@@ -119,39 +110,46 @@ class Waveform(DPT.DPObject):
         if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
             return plotOpts 
 
+        if self.current_plot_type is None:
+            self.current_plot_type = plot_type
+
         if getNumEvents:  
             # this will be called by PanGUI.main to return two values: 
             # first value is the total number of items to pan through, 
             # second value is the current index of the item to plot
-            # .........................................
-            # ..................code...................
-            # .........................................
-            if getNumEvents:  
-                # this will be called by PanGUI.main to return two values: 
-                # first value is the total number of items to pan through, 
-                # second value is the current index of the item to plot
+
+            if self.current_plot_type == plot_type:
                 if plot_type == 'Channel':
                     return self.numSets, i
-
-            if plot_type == 'Channel':
-                y = self.data[i]
-                x = np.arange(y.shape[0])
-                ax.plot(x, y)
             
-                if not plotOpts['TitleOff']:
-                    ax.set_title(self.dirs[i])
-                            
-                if not plotOpts['LabelsOff']:
-                    ax.set_xlabel('Time (sample unit)')
-                    ax.set_ylabel('Voltage (uV)')
+                elif plot_type == 'Array':
+                    return len(self.array_dict), i
             
-                if plotOpts['TicksOff']:
-                    ax.set_xticklabels([])
-                    ax.set_yticklabels([])
+            elif self.current_plot_type == 'Array' and plot_type == 'Channel':
+                # add code to return number of channels and the appropriate
+                # channel number if the current array number is i
+                self.current_plot_type == 'Channel'
+                
+                anum = 0
+                for x in self.array_dict:
+                    if (anum ==(i-1)):
+                        return self.numSets, self.array_dict[x]+1
+                    anum + 1
+                
+                return self.numSets, i
 
-
-            
-            return  # please return two items here: <total-number-of-items-to-plot>, <current-item-index-to-plot>
+            elif self.current_plot_type == 'Channel' and plot_type == 'Array':  
+                # add code to return number of arrays and the appropriate
+                # array number if the current channel number is i
+                self.current_plot_type == 'Array'
+                
+                cnum = 0
+                for ar in self.array_dict:
+                    if self.array_dict[ar] >= i:
+                        return len(self.array_dict), cnum
+                    cnum += 1
+                
+                return len(self.array_dict), i
                 
         if ax is None:
             ax = plt.gca()
@@ -162,38 +160,70 @@ class Waveform(DPT.DPObject):
         ######################################################################
         #################### start plotting ##################################
         ######################################################################
-        if plot_type == 'Channel':  # plot in channel level
-            # plot the mountainsort data according to the current index 'i'
-            # .........................................
-            # ..................code...................
-            # .........................................
-            pass  # you may delete this line
     
-        ########labels###############
-        if not plotOpts['TitleOff']:  # if TitleOff icon in the right-click menu is clicked
-            # set the title in this format: channelxxx, fill with zeros if the channel number is not three-digit
-            # .........................................
-            # ..................codes..................
-            # .........................................
-            pass  # you may delete this line
-            
-        if not plotOpts['LabelsOff']:  # if LabelsOff icon in the right-click menu is clicked
-            # set the xlabel and ylabel
-            # .........................................
-            # ..................code...................
-            # .........................................
-            pass  # you may delete this line
-            
+
+        fig = ax.figure  # get the parent figure of the ax
+        
+        if plot_type == 'Channel':
+            if self.current_plot_type == 'Array':
+                self.remove_subplots(fig)
+                ax = fig.add_subplot(1,1,1)
+
+            self.plot_data(i, ax, plotOpts, 1)
+        
+        elif plot_type == 'Array':
+            self.remove_subplots(fig)
+            advals = np.array([*self.array_dict.values()])
+            # set the starting index cstart for array i
+            cstart = 0
+            if i > 0: 
+                cstart = advals[i-1] + 1
+            # set the ending index cend for array i
+            cend = advals[i]
+            currch = cstart
+            while currch <= cend :
+                # get channel name
+                currchname = self.dirs[currch]
+                # get axis position for channel
+                ax, isCorner = getChannelInArray(currchname, fig)
+                self.plot_data(currch, ax, plotOpts, isCorner)
+                currch += 1
+        
         return ax
+            
+    def plot_data(self, i, ax, plotOpts, isCorner):
+        fig = ax.figure  # get the parent figure of the ax
+
+        y = self.data[i]
+        x = np.arange(y.shape[0])
+        ax.plot(x, y)
     
+        if not plotOpts['TitleOff']:
+#            ax.set_title(self.dirs[i])
+            ax.set_title(self.dirs[i][27:])
+                    
+        if (not plotOpts['LabelsOff']) or isCorner:
+            ax.set_xlabel('Time (sample unit)')
+            ax.set_ylabel('Voltage (uV)')
     
+        if plotOpts['TicksOff'] or (not isCorner):
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
     
+        
+    def remove_subplots(self, fig):
+        for x in fig.get_axes():  # remove all axes in current figure
+            x.remove() 
+ 
     #%% helper functions        
     # Please make use of the properties of the OOP to call and edit the field-value
     # pairs that can be shared across different functions in this object.
     # This will greatly increase the efficiency in maintaining the codes,
     # especially for those lines that are used for multiple times in multiple places.
     # Other than that, this will also greatly increase the readability of the code
+
+
+
         
         
     
