@@ -192,7 +192,7 @@ class Waveform(DPT.DPObject):
                 # add code to return number of arrays and the appropriate
                 # array number if the current channel number is i
                 self.current_plot_type == 'Array'
-                
+                self.remove_subplots(fig)
                 cnum = 0
                 for ar in self.array_dict:
                     if self.array_dict[ar] >= i:
@@ -230,6 +230,7 @@ class Waveform(DPT.DPObject):
         ######################################################################
         #################### start plotting ##################################
         ######################################################################
+<<<<<<< HEAD
 
     
 
@@ -255,17 +256,25 @@ class Waveform(DPT.DPObject):
 
         fig = ax.figure  # get the parent figure of the ax
 
+=======
+>>>>>>> upstream/master
         if plot_type == 'Channel':  # plot in channel level
             if self.current_plot_type == 'Array':
-                self.remove_subplots(fig)
+                fig = ax.figure  # get the parent figure of the ax
+                for x in fig.get_axes():  # remove all axes in current figure
+                    x.remove()    
                 ax = fig.add_subplot(1,1,1)
                 
             # plot the mountainsort data according to the current index 'i'
             self.plot_data(i, ax, plotOpts)
+            self.plot_data(i, ax, plotOpts, 1)
             self.current_plot_type = 'Channel'
                     
         elif plot_type == 'Array':  # plot in channel level
             self.remove_subplots(fig)
+            fig = ax.figure  # get the parent figure of the ax
+            for x in fig.get_axes():  # remove all axes in current figure
+                x.remove()    
 
             # get values in array_dict
             advals = np.array([*self.array_dict.values()])
@@ -286,6 +295,7 @@ class Waveform(DPT.DPObject):
                 # get channel name
                 currchname = self.dirs[currch]
                 # get axis position for channel
+<<<<<<< HEAD
 
                 ax, isCorner = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts, isCorner)
@@ -320,6 +330,10 @@ class Waveform(DPT.DPObject):
 
                 ax = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts)
+=======
+                ax,isCorner = getChannelInArray(currchname, fig)
+                self.plot_data(currch, ax, plotOpts, isCorner)
+>>>>>>> upstream/master
                 currch += 1
                 
             self.current_plot_type = 'Array'
@@ -345,7 +359,7 @@ class Waveform(DPT.DPObject):
             print('No mountainsort template file was found for {0}...'.format(self.channel_filename[0]))
             self.data = [np.array([])]
         
-    def plot_data(self, ind, ax, plotOpts):
+    def plot_data(self, ind, ax, plotOpts, isCorner):
         # plot the mountainsort data according to the index 'ind'
         y = self.data[ind]
         x = np.arange(y.shape[0])
@@ -355,16 +369,19 @@ class Waveform(DPT.DPObject):
         if not plotOpts['TitleOff']:  # if TitleOff icon in the right-click menu is clicked
             ax.set_title(self.dirs[ind])
                 
-        if not plotOpts['LabelsOff']:  # if LabelsOff icon in the right-click menu is clicked
+        if (not plotOpts['LabelsOff']) or isCorner:  # if LabelsOff icon in the right-click menu is clicked
             ax.set_xlabel('Time (sample unit)')
             ax.set_ylabel('Voltage (uV)')
             
-        if plotOpts['TicksOff']:
+        if plotOpts['TicksOff'] or (not isCorner):
             ax.set_xticks([])
             ax.set_yticks([])
+<<<<<<< HEAD
 
     def remove_subplots(self, fig):
         for x in fig.get_axes():  # remove all axes in current figure
             x.remove()    
         
 
+=======
+>>>>>>> upstream/master
