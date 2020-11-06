@@ -378,6 +378,6 @@ class Waveform(DPT.DPObject):
 
     def remove_subplots(self, fig):
         for x in fig.get_axes():  # remove all axes in current figure
-            x.remove()    
+            x.remove()   
         
 
