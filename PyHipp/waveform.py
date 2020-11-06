@@ -295,40 +295,39 @@ class Waveform(DPT.DPObject):
         
         return ax
             
-    def plot_data(self, i, ax, plotOpts, isCorner):
-        fig = ax.figure  # get the parent figure of the ax
-
-        y = self.data[i]
-        x = np.arange(y.shape[0])
-        ax.plot(x, y)
-    
-        if not plotOpts['TitleOff']:
-#            ax.set_title(self.dirs[i])
-            ax.set_title(self.dirs[i][27:])
-                    
-        if (not plotOpts['LabelsOff']) or isCorner:
-            ax.set_xlabel('Time (sample unit)')
-            ax.set_ylabel('Voltage (uV)')
-    
-        if plotOpts['TicksOff'] or (not isCorner):
-            ax.set_xticklabels([])
-            ax.set_yticklabels([])
+##    def plot_data(self, i, ax, plotOpts, isCorner):
+##        fig = ax.figure  # get the parent figure of the ax
+##
+##        y = self.data[i]
+##        x = np.arange(y.shape[0])
+##        ax.plot(x, y)
+##    
+##        if not plotOpts['TitleOff']:
+###            ax.set_title(self.dirs[i])
+##            ax.set_title(self.dirs[i][27:])
+##                    
+##        if (not plotOpts['LabelsOff']) or isCorner:
+##            ax.set_xlabel('Time (sample unit)')
+##            ax.set_ylabel('Voltage (uV)')
+##    
+##        if plotOpts['TicksOff'] or (not isCorner):
+##            ax.set_xticklabels([])
+##            ax.set_yticklabels([])
     
         
-    def remove_subplots(self, fig):
-        for x in fig.get_axes():  # remove all axes in current figure
-            x.remove() 
- 
-
-                ax = getChannelInArray(currchname, fig)
-                self.plot_data(currch, ax, plotOpts)
-
-                ax,isCorner = getChannelInArray(currchname, fig)
-                self.plot_data(currch, ax, plotOpts, isCorner)
-
-                currch += 1
-                
-            self.current_plot_type = 'Array'
+##    def remove_subplots(self, fig):
+##        for x in fig.get_axes():  # remove all axes in current figure
+##            x.remove() 
+## 
+##                ax = getChannelInArray(currchname, fig)
+##                self.plot_data(currch, ax, plotOpts)
+##
+##                ax,isCorner = getChannelInArray(currchname, fig)
+##                self.plot_data(currch, ax, plotOpts, isCorner)
+##
+##                currch += 1
+##                
+##            self.current_plot_type = 'Array'
     
 
     #%% helper functions        
