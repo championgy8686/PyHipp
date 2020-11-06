@@ -147,15 +147,9 @@ class Waveform(DPT.DPObject):
 
         plot_type = plotOpts['PlotType'].selected()  # this variable will store the selected item in 'Type'
 
-        if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
-            return plotOpts 
-
-        if self.current_plot_type is None:
 
         if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
             return plotOpts 
-
-        plot_type = plotOpts['PlotType'].selected()  # this variable will store the selected item in 'Type'
 
         if self.current_plot_type is None:  # initial assignement of self.current_plot_type
 
