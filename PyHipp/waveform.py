@@ -18,7 +18,6 @@ class Waveform(DPT.DPObject):
 
     argsList = [("mountainsDirectory", "mountains"), 
         ("ouputDirectory","output"), ("templateFilename","templates.hkl")]
->>>>>>> upstream/master
     level = 'channel'  # this is the level that this object will be created in
 
     def __init__(self, *args, **kwargs):
