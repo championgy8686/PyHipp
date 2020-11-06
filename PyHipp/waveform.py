@@ -230,7 +230,7 @@ class Waveform(DPT.DPObject):
         ######################################################################
         #################### start plotting ##################################
         ######################################################################
-<<<<<<< HEAD
+
 
     
 
@@ -256,8 +256,7 @@ class Waveform(DPT.DPObject):
 
         fig = ax.figure  # get the parent figure of the ax
 
-=======
->>>>>>> upstream/master
+
         if plot_type == 'Channel':  # plot in channel level
             if self.current_plot_type == 'Array':
                 fig = ax.figure  # get the parent figure of the ax
@@ -295,7 +294,7 @@ class Waveform(DPT.DPObject):
                 # get channel name
                 currchname = self.dirs[currch]
                 # get axis position for channel
-<<<<<<< HEAD
+
 
                 ax, isCorner = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts, isCorner)
@@ -330,10 +329,10 @@ class Waveform(DPT.DPObject):
 
                 ax = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts)
-=======
+
                 ax,isCorner = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts, isCorner)
->>>>>>> upstream/master
+
                 currch += 1
                 
             self.current_plot_type = 'Array'
@@ -376,12 +375,10 @@ class Waveform(DPT.DPObject):
         if plotOpts['TicksOff'] or (not isCorner):
             ax.set_xticks([])
             ax.set_yticks([])
-<<<<<<< HEAD
+
 
     def remove_subplots(self, fig):
         for x in fig.get_axes():  # remove all axes in current figure
             x.remove()    
         
 
-=======
->>>>>>> upstream/master
