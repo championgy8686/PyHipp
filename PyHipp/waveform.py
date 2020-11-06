@@ -1,24 +1,21 @@
 import DataProcessingTools as DPT
 import matplotlib.pyplot as plt
-<<<<<<< HEAD
 import hickle as hkl
 import os
 import numpy as np
 from PyHipp.misc import getChannelInArray
 
-=======
 import os
 import hickle as hkl
 import numpy as np
 from .misc import getChannelInArray
->>>>>>> upstream/master
 
 class Waveform(DPT.DPObject):
     # Please change the class name according to your needs
     filename = 'waveform.hkl'  # this is the filename that will be saved if it's run with saveLevel=1
-<<<<<<< HEAD
+
     argsList = []  # these is where arguments used in the creation of the object are listed
-=======
+
     argsList = [("mountainsDirectory", "mountains"), 
         ("ouputDirectory","output"), ("templateFilename","templates.hkl")]
 >>>>>>> upstream/master
@@ -28,12 +25,11 @@ class Waveform(DPT.DPObject):
         DPT.DPObject.__init__(self, *args, **kwargs)
 
     def create(self, *args, **kwargs):
-<<<<<<< HEAD
+
         # this function will be called once to create this waveform object
-=======
+
         # thie function will be called by PanGUI.main once to create this waveform object
->>>>>>> upstream/master
-        
+
         # one neat property of Object-Oriented Programming (OOP) structure is that 
         # you can create some field-value pairs that can be called and updated 
         # in all functions of the object, if you specify the function properly.
@@ -55,7 +51,7 @@ class Waveform(DPT.DPObject):
         # In this way, you don't need to return and pass in so many arguments 
         # across different functions anymore :)
         
-<<<<<<< HEAD
+
         
         # The following is some hints of the things-to-do:
         
@@ -89,7 +85,7 @@ class Waveform(DPT.DPObject):
             # create empty object if data is empty
             DPT.DPObject.create(self, dirs=[], *args, **kwargs)     
               
-=======
+
         # The following is some hints of the things-to-do:
         # get current channel name
         pwd = os.path.normpath(os.getcwd());
@@ -110,26 +106,23 @@ class Waveform(DPT.DPObject):
             # create empty object if data is empty
             DPT.DPObject.create(self, dirs=[], *args, **kwargs)            
 
->>>>>>> upstream/master
+
     def append(self, wf):
         # this function will be called by processDirs to append the values of certain fields
         # from an extra object (wf) to this object
         # It is useful to store the information of the objects for panning through in the future
         DPT.DPObject.append(self, wf)  # append self.setidx and self.dirs
-<<<<<<< HEAD
+
         self.data = self.data + wf.data
-=======
+
         self.data += wf.data
         # loop through array dictionary in wf
->>>>>>> upstream/master
+
         for ar in wf.array_dict:
             self.array_dict[ar] = self.numSets
         self.numSets += 1
         
-<<<<<<< HEAD
-        
-=======
->>>>>>> upstream/master
+
     def plot(self, i = None, ax = None, getNumEvents = False, getLevels = False,\
              getPlotOpts = False, overlay = False, **kwargs):
         # this function will be called in different instances in PanGUI.main
@@ -152,28 +145,28 @@ class Waveform(DPT.DPObject):
         for (k, v) in plotOpts.items():
                     plotOpts[k] = kwargs.get(k, v)  
                     
-<<<<<<< HEAD
+
         plot_type = plotOpts['PlotType'].selected()  # this variable will store the selected item in 'Type'
 
         if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
             return plotOpts 
 
         if self.current_plot_type is None:
-=======
+
         if getPlotOpts:  # this will be called by PanGUI.main to obtain the plotOpts to create a menu once we right-click on the axis
             return plotOpts 
 
         plot_type = plotOpts['PlotType'].selected()  # this variable will store the selected item in 'Type'
 
         if self.current_plot_type is None:  # initial assignement of self.current_plot_type
->>>>>>> upstream/master
+
             self.current_plot_type = plot_type
 
         if getNumEvents:  
             # this will be called by PanGUI.main to return two values: 
             # first value is the total number of items to pan through, 
             # second value is the current index of the item to plot
-<<<<<<< HEAD
+
 
             if self.current_plot_type == plot_type:
                 if plot_type == 'Channel':
@@ -207,7 +200,7 @@ class Waveform(DPT.DPObject):
                     cnum += 1
                 
                 return len(self.array_dict), i
-=======
+
             if self.current_plot_type == plot_type:  # no changes to plot_type
                 if plot_type == 'Channel':
                     return self.numSets, i
@@ -226,7 +219,7 @@ class Waveform(DPT.DPObject):
                 # find index that is larger than i
                 vi = (advals >= i).nonzero()
                 return len(self.array_dict), vi[0][0]
->>>>>>> upstream/master
+
                 
         if ax is None:
             ax = plt.gca()
@@ -237,7 +230,7 @@ class Waveform(DPT.DPObject):
         ######################################################################
         #################### start plotting ##################################
         ######################################################################
-<<<<<<< HEAD
+
     
 
         fig = ax.figure  # get the parent figure of the ax
@@ -259,7 +252,7 @@ class Waveform(DPT.DPObject):
             # set the ending index cend for array i
             cend = advals[i]
             currch = cstart
-=======
+
         fig = ax.figure  # get the parent figure of the ax
 
         if plot_type == 'Channel':  # plot in channel level
@@ -288,12 +281,12 @@ class Waveform(DPT.DPObject):
             plotOpts['LabelsOff'] = True
             plotOpts['TitleOff'] = True
             plotOpts['TicksOff'] = True
->>>>>>> upstream/master
+
             while currch <= cend :
                 # get channel name
                 currchname = self.dirs[currch]
                 # get axis position for channel
-<<<<<<< HEAD
+
                 ax, isCorner = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts, isCorner)
                 currch += 1
@@ -324,28 +317,21 @@ class Waveform(DPT.DPObject):
         for x in fig.get_axes():  # remove all axes in current figure
             x.remove() 
  
-=======
+
                 ax = getChannelInArray(currchname, fig)
                 self.plot_data(currch, ax, plotOpts)
                 currch += 1
                 
             self.current_plot_type = 'Array'
     
->>>>>>> upstream/master
+
     #%% helper functions        
     # Please make use of the properties of the OOP to call and edit the field-value
     # pairs that can be shared across different functions in this object.
     # This will greatly increase the efficiency in maintaining the codes,
     # especially for those lines that are used for multiple times in multiple places.
     # Other than that, this will also greatly increase the readability of the code
-<<<<<<< HEAD
 
-
-
-        
-        
-    
-=======
     def read_templates(self):
         # make the following items as lists for the sake of self.append
         template_fileanme = os.path.join(DPT.levels.resolve_level("day", self.channel_filename[0]),
@@ -381,4 +367,4 @@ class Waveform(DPT.DPObject):
         for x in fig.get_axes():  # remove all axes in current figure
             x.remove()    
         
->>>>>>> upstream/master
+
